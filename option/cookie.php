@@ -2,16 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the your app package.
- *
- * The PHP Application For Code Poem For You.
- * (c) 2018-2099 http://yourdomian.com All rights reserved.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 return [
     /*
      * ---------------------------------------------------------------
@@ -70,4 +60,16 @@ return [
      * 相关技术文档：http://php.net/manual/zh/function.setcookie.php
      */
     'httponly' => false,
+
+    /*
+     * ---------------------------------------------------------------
+     * cookie 跨域发送设置
+     * ---------------------------------------------------------------
+     *
+     * 允许服务器设定一则 cookie 不随着跨域请求一起发送，这样可以在一定程度上防范跨站请求伪造攻击（CSRF）。
+     * Strict 或 Lax
+     * 相关技术文档：https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Set-Cookie
+     * 例外 php 7.3 支持 https://www.php.net/manual/en/function.setcookie.php
+     */
+    'samesite' => null,
 ];

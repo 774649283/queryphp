@@ -2,30 +2,14 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the your app package.
- *
- * The PHP Application For Code Poem For You.
- * (c) 2018-2099 http://yourdomian.com All rights reserved.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Tests\Admin\Service\Resource;
 
-use Admin\App\Service\Resource\Index;
-use Admin\App\Service\Resource\Store;
+use Admin\Service\Resource\Index;
+use Admin\Service\Resource\Store;
 use Tests\TestCase;
 
 /**
  * IndexTest.
- *
- * @author Name Your <your@mail.com>
- *
- * @since 2018.11.20
- *
- * @version 1.0
  */
 class IndexTest extends TestCase
 {
@@ -58,8 +42,11 @@ class IndexTest extends TestCase
             {
                 "per_page": 10,
                 "current_page": 1,
+                "total_page": null,
                 "total_record": 0,
-                "from": 0
+                "total_macro": false,
+                "from": 0,
+                "to": 0
             }
             eot;
 
@@ -90,8 +77,11 @@ class IndexTest extends TestCase
             {
                 "per_page": 10,
                 "current_page": 1,
+                "total_page": 1,
                 "total_record": 1,
-                "from": 0
+                "total_macro": false,
+                "from": 0,
+                "to": 1
             }
             eot;
 
@@ -105,10 +95,10 @@ class IndexTest extends TestCase
         $first = $result['data'][0];
 
         $this->assertCount(1, $result['data']);
-        $this->assertSame('1', $first['id']);
+        $this->assertSame(1, $first['id']);
         $this->assertSame('foo', $first['name']);
-        $this->assertSame('bar', $first['identity']);
-        $this->assertSame('1', $first['status']);
+        $this->assertSame('bar', $first['num']);
+        $this->assertSame(1, $first['status']);
     }
 
     protected function clear()
@@ -122,7 +112,7 @@ class IndexTest extends TestCase
 
         $service->handle([
             'name'     => 'foo',
-            'identity' => 'bar',
+            'num'      => 'bar',
             'status'   => '1',
         ]);
     }

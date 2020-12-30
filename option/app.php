@@ -2,16 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the your app package.
- *
- * The PHP Application For Code Poem For You.
- * (c) 2018-2099 http://yourdomian.com All rights reserved.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 return [
     /*
      * ---------------------------------------------------------------
@@ -77,7 +67,7 @@ return [
      *
      * 加密数据附加的生成签名
      */
-    'auth_rsa_private' => file_get_contents(Leevel::path('rsa_private_key.pem')),
+    'auth_rsa_private' => file_get_contents(Leevel::path('assets/rsa/rsa_private_key.pem')),
 
     /*
      * ---------------------------------------------------------------
@@ -86,7 +76,7 @@ return [
      *
      * 解密数据附加的校验签名
      */
-    'auth_rsa_public' => file_get_contents(Leevel::path('rsa_public_key.pem')),
+    'auth_rsa_public' => file_get_contents(Leevel::path('assets/rsa/rsa_public_key.pem')),
 
     /*
      * ---------------------------------------------------------------
@@ -117,21 +107,21 @@ return [
 
     /*
      * ---------------------------------------------------------------
-     * public　资源地址
+     * 静态资源地址
      * ---------------------------------------------------------------
      *
-     * 设置公共资源 url 地址
-     * php leevel link:public
+     * 设置静态资源 URL 地址
+     * php leevel link:static
      */
-    'public' => Leevel::env('PUBLIC', 'http://127.0.0.1:9527/public'),
+    'static_url' => Leevel::env('STATIC_URL', 'http://127.0.0.1:9527/static'),
 
     /*
      * ---------------------------------------------------------------
      * 附件地址
      * ---------------------------------------------------------------
      *
-     * 设置公共附件 url 地址
-     * php leevel link:storage
+     * 设置上传附件 URL 地址
+     * php leevel link:attachments
      */
-    'storage' => Leevel::env('STORAGE', 'http://127.0.0.1:9527/storage'),
+    'attachments_url' => Leevel::env('ATTACHMENTS_URL', 'http://127.0.0.1:9527/attachments'),
 ];

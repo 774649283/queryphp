@@ -2,71 +2,40 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the your app package.
- *
- * The PHP Application For Code Poem For You.
- * (c) 2018-2099 http://yourdomian.com All rights reserved.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 use Dotenv\Dotenv;
-use Dotenv\Exception\InvalidFileException;
-use Dotenv\Exception\InvalidPathException;
 use Leevel\Di\Container;
 use Leevel\Kernel\App;
 use Leevel\Kernel\IApp;
 use Symfony\Component\Console\Input\ArgvInput;
+use Leevel\Option\Env;
 
-/**
- * ---------------------------------------------------------------
- * Composer
- * ---------------------------------------------------------------.
- *
- * 用于管理 PHP 依赖包
- */
+// 加载 Composer
 require __DIR__.'/vendor/autoload.php';
 
-/**
- * ---------------------------------------------------------------
- * 创建应用
- * ---------------------------------------------------------------.
- *
- * 注册应用基础服务
- */
+// 创建应用
 $container = Container::singletons();
 $app = new App($container, realpath(__DIR__));
 
-/*
- * ---------------------------------------------------------------
- * 载入环境
- * ---------------------------------------------------------------.
- *
- * 读取 phinx 运行环境
- */
-if (($input = new ArgvInput())->hasParameterOption('-e')) {
-    putenv('RUNTIME_ENVIRONMENT='.$input->getParameterOption('-e'));
+// 载入环境
+$input = new ArgvInput();
+if ($input->hasParameterOption('-e')) {
+    $env = $input->getParameterOption('-e');
+} elseif ($input->hasParameterOption('--environment')) {
+    $env = $input->getParameterOption('--environment');
+} else {
+    $env = 'env';
 }
+putenv('RUNTIME_ENVIRONMENT='.$env);
 
 /**
  * 载入配置.
- *
- * @author Xiangmin Liu <635750556@qq.com>
- *
- * @since 2018.12.03
- *
- * @version 1.0
  */
 class PhinxLoad
 {
+    use Env;
+    
     /**
      * 执行入口.
-     *
-     * @param \Leevel\Kernel\IApp $app
-     *
-     * @return array
      */
     public function handle(IApp $app): array
     {
@@ -77,44 +46,27 @@ class PhinxLoad
 
     /**
      * 载入环境变量数据.
-     *
-     * @param \Leevel\Kernel\IApp $app
-     *
-     * @return array
      */
     private function loadEnvData(IApp $app): array
     {
-        $oldEnv = $_ENV;
-        $_ENV = [];
+        $dotenv = Dotenv::createMutable($app->envPath(), $app->envFile());
+        $this->setEnvVars($envVars = $dotenv->load());
 
-        try {
-            (new Dotenv($app->envPath(), $app->envFile()))->overload();
-        } catch (InvalidPathException $e) {
-            throw new RuntimeException($e->getMessage());
-        } catch (InvalidFileException $e) {
-            throw new RuntimeException($e->getMessage());
-        }
-
-        $result = $_ENV;
-        $_ENV = array_merge($oldEnv, $_ENV);
-
-        return $result;
+        return $envVars;
     }
 
     /**
      * 载入运行时环境变量.
      *
-     * @param \Leevel\Kernel\IApp $appy
+     * @throws \RuntimeException
      */
     private function checkRuntimeEnv(IApp $app)
     {
         if (!getenv('RUNTIME_ENVIRONMENT')) {
             return;
         }
-
+        
         $file = '.'.getenv('RUNTIME_ENVIRONMENT');
-
-        // 校验运行时环境，防止测试用例清空非测试库的业务数据
         if (!is_file($fullFile = $app->envPath().'/'.$file)) {
             $e = sprintf('Env file `%s` was not found.', $fullFile);
 
@@ -125,13 +77,7 @@ class PhinxLoad
     }
 }
 
-/*
- * ---------------------------------------------------------------
- * 读取配置
- * ---------------------------------------------------------------.
- *
- * 读取配置并且返回配置值
- */
+// 读取配置
 (new PhinxLoad())->handle($app);
 
 return [
@@ -160,7 +106,7 @@ return [
             'port'      => Leevel::env('DATABASE_PORT', 3306),
             'charset'   => 'utf8',
         ],
-        'testing'   => [
+        'env.phpunit'   => [
             'adapter'   => 'mysql',
             'host'      => Leevel::env('DATABASE_HOST', 'localhost'),
             'name'      => Leevel::env('DATABASE_NAME', ''),

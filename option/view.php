@@ -2,16 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the your app package.
- *
- * The PHP Application For Code Poem For You.
- * (c) 2018-2099 http://yourdomian.com All rights reserved.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 return [
     /*
      * ---------------------------------------------------------------
@@ -29,7 +19,7 @@ return [
      *
      * 默认错误跳转对应的模板文件
      */
-    'fail' => 'fail',
+    'fail' => 'public/fail',
 
     /*
      * ---------------------------------------------------------------
@@ -38,7 +28,7 @@ return [
      *
      * 默认成功跳转对应的模板文件
      */
-    'success' => 'success',
+    'success' => 'public/success',
 
     /*
      * ---------------------------------------------------------------

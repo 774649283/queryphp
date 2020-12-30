@@ -2,16 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the your app package.
- *
- * The PHP Application For Code Poem For You.
- * (c) 2018-2099 http://yourdomian.com All rights reserved.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 return [
     /*
      * ---------------------------------------------------------------
@@ -28,6 +18,7 @@ return [
      * ---------------------------------------------------------------
      *
      * 相当于 session_id
+     * null 表示自动生成随机字符串
      */
     'id' => null,
 
@@ -42,12 +33,14 @@ return [
 
     /*
      * ---------------------------------------------------------------
-     * expire
+     * COOKIE 过期时间
      * ---------------------------------------------------------------
      *
-     * 默认过期时间
+     * SESSION 依赖 COOKIE
+     * COOKIE 默认过期时间
+     * 小于等于 0 表示关闭浏览器即失效
      */
-    'expire' => 86400,
+    'cookie_expire' => 86400,
 
     /*
      * ---------------------------------------------------------------
@@ -62,43 +55,16 @@ return [
             // driver
             'driver' => 'file',
 
-            // 文件缓存路径
-            'path' => Leevel::runtimePath('session'),
-
-            // 是否 serialize 格式化
-            'serialize' => true,
-
-            // 默认过期时间
-            'expire' => null,
+            // 文件缓存驱动
+            'file_driver' => Leevel::env('SESSION_FILE_DRIVER', 'file_session'),
         ],
 
         'redis' => [
             // driver
             'driver' => 'redis',
 
-            // 默认缓存服务器
-            'host' => Leevel::env('SESSION_REDIS_HOST', '127.0.0.1'),
-
-            // 默认缓存服务器端口
-            'port' => Leevel::env('SESSION_REDIS_PORT', 6379),
-
-            // 认证密码
-            'password' => Leevel::env('SESSION_REDIS_PASSWORD', ''),
-
-            // redis 数据库索引
-            'select' => 0,
-
-            // 超时设置
-            'timeout' => 0,
-
-            // 是否使用持久连接
-            'persistent' => false,
-
-            // 是否使用 serialize 编码
-            'serialize' => true,
-
-            // 默认过期时间
-            'expire' => null,
+            // Redis 缓存驱动
+            'redis_driver' => Leevel::env('SESSION_REDIS_DRIVER', 'redis_session'),
         ],
 
         'test' => [

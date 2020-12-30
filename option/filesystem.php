@@ -2,20 +2,10 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the your app package.
- *
- * The PHP Application For Code Poem For You.
- * (c) 2018-2099 http://yourdomian.com All rights reserved.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 return [
     /*
      * ---------------------------------------------------------------
-     * filesystem 驱动
+     * 文件驱动
      * ---------------------------------------------------------------
      *
      * 采用什么方式发送邮件数据
@@ -24,7 +14,7 @@ return [
 
     /*
      * ---------------------------------------------------------------
-     * filesystem 驱动连接参数
+     * 文件驱动连接参数
      * ---------------------------------------------------------------
      *
      * 这里为所有的 filesystem 驱动的连接参数，每一种不同的驱动拥有不同的配置
@@ -36,7 +26,7 @@ return [
             'driver' => 'local',
 
             // path
-            'path' => Leevel::storagePath(),
+            'path' => Leevel::storagePath('attachments'),
         ],
 
         'zip' => [
@@ -44,7 +34,7 @@ return [
             'driver' => 'zip',
 
             // path
-            'path' => Leevel::storagePath('filesystem.zip'),
+            'path' => Leevel::storagePath('attachments/filesystem.zip'),
         ],
 
         'ftp' => [
@@ -55,7 +45,7 @@ return [
             'host' => Leevel::env('FILESYSTEM_FTP_HOST', 'ftp.example.com'),
 
             // 端口
-            'port' => Leevel::env('FILESYSTEM_FTP_PORT', 21),
+            'port' => (int) Leevel::env('FILESYSTEM_FTP_PORT', 21),
 
             // 用户名
             'username' => Leevel::env('FILESYSTEM_FTP_USERNAME', 'your-username'),
@@ -84,7 +74,7 @@ return [
             'host' => Leevel::env('FILESYSTEM_SFTP_HOST', 'sftp.example.com'),
 
             // 端口
-            'port' => Leevel::env('FILESYSTEM_SFTP_PORT', 22),
+            'port' => (int) Leevel::env('FILESYSTEM_SFTP_PORT', 22),
 
             // 用户名
             'username' => Leevel::env('FILESYSTEM_SFTP_USERNAME', 'your-username'),

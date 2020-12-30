@@ -2,16 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the your app package.
- *
- * The PHP Application For Code Poem For You.
- * (c) 2018-2099 http://yourdomian.com All rights reserved.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 return [
     /*
      * ---------------------------------------------------------------
@@ -63,7 +53,7 @@ return [
      * 缓冲数量
      * ---------------------------------------------------------------
      *
-     * 日志数量达到这个数量会执行一次 IO 操作
+     * 日志数量达到缓冲数量会执行一次 IO 操作
      */
     'buffer_size' => 100,
 
@@ -86,11 +76,17 @@ return [
             // 日志文件名时间格式化
             'name' => 'Y-m-d H',
 
-            // 日志文件大小限制,单位为字节 byte
-            'size' => 2097152,
-
             // 默认的日志路径
-            'path' => Leevel::runtimePath('log'),
+            'path' => Leevel::storagePath('logs'),
+
+            // 日志行时间格式化，支持微秒
+            'format' => 'Y-m-d H:i:s u',
+
+            // 日志文件权限
+            'file_permission' => null,
+
+            // 是否使用锁
+            'use_locking' => false,
         ],
 
         'syslog' => [
@@ -105,6 +101,9 @@ return [
 
             // 等级
             'level' => 'debug',
+
+            // 日志行事件格式化，支持微秒
+            'format' => 'Y-m-d H:i:s u',
         ],
     ],
 ];

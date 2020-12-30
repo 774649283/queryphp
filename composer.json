@@ -13,36 +13,45 @@
         "email": "635750556@qq.com"
     }],
     "require": {
-        "php": "^7.3.2",
+        "php": "^8.0",
+        "ext-mbstring": "*",
+        "ext-openssl": "*",
         "hunzhiwange/framework": "dev-master"
     },
     "require-dev": {
-        "codedungeon/phpunit-result-printer": "^0.26.2",
-        "php-coveralls/php-coveralls": "^2.1",
-        "phpunit/phpunit": "^8.2.1",
-        "fzaninotto/faker": "^1.6",
-        "robmorgan/phinx": "^0.9.2"
+        "codedungeon/php-cli-colors": "^1.12.0",
+        "robmorgan/phinx": "^0.12.4",
+        "zircote/swagger-php": "^3.1.0"
     },
     "autoload": {
         "files": [
-            "common/Infra/functions.php"
+            "apps/app/Infra/functions.php"
         ],
         "psr-4": {
-            "App\\" : "application/app",
-            "Admin\\" : "application/admin",
-            "Common\\" : "common"
+            "App\\" : "apps/app",
+            "Admin\\" : "apps/admin"
         },
         "exclude-from-classmap": [
             "/tests/",
             "/**/Tests/",
             "/**/*Test.php",
             "/**/Fixtures/",
-            "/vendor/symfony/",
+            "/vendor/symfony/var-dumper",
+            "/vendor/symfony/polyfill-php72",
+            "/vendor/symfony/polyfill-php73",
+            "/vendor/symfony/polyfill-mbstring",
+            "/vendor/symfony/var-dumper",
+            "/vendor/symfony/console",
+            "/vendor/symfony/translation-contracts",
+            "/vendor/symfony/translation",
+            "/vendor/symfony/service-contracts",
+            "/vendor/symfony/psr-http-message-bridge",
+            "/vendor/symfony/yaml",
+            "/vendor/symfony/string",
             "/vendor/zircote/",
             "/vendor/filp/",
             "/vendor/spiral/",
-            "/vendor/zendframework/",
-            "/vendor/leric/",
+            "/vendor/laminas/",
             "/vendor/maximebf/",
             "/vendor/vlucas/",
             "/vendor/nunomaduro/",
@@ -56,89 +65,76 @@
             "/vendor/hunzhiwange/framework/src/**/Console/",
             "/vendor/monolog/",
             "/vendor/codedungeon/",
-            "/vendor/jakub-onderka/",
-            "/vendor/nesbot/carbon/src/JsonSerializable.php",
-            "/vendor/league/",
-            "@/vendor/symfony/:Product not used",
-            "@/vendor/zircote/:Product not used",
-            "@/vendor/filp/:Product not used",
-            "@/vendor/spiral/:Only roadRunner used",
-            "@/vendor/zendframework/:Only roadRunner used",
-            "@/vendor/leric/:Only swoole rpc used",
-            "@/vendor/maximebf/:Product not used",
-            "@/vendor/vlucas/:Product not used",
-            "@/vendor/nunomaduro/:Product not used",
-            "@/vendor/gettext/:Product not used",
-            "@/vendor/doctrine/:Product not used",
-            "@/vendor/egulias/:Product not used",
-            "@/vendor/hunzhiwange/framework/src/Leevel/Protocol/:Only swoole used",
-            "@/vendor/hunzhiwange/framework/src/Leevel/Debug/:Product not used",
-            "@/vendor/psr/:Product not used",
-            "@/vendor/clio/:Product not used",
-            "@/vendor/hunzhiwange/framework/src/**/Console/:Product not used",
-            "@/vendor/monolog/:Product not used",
-            "@/vendor/codedungeon/:Product not used",
-            "@/vendor/jakub-onderka/:Product not used",
-            "@/vendor/nesbot/carbon/src/JsonSerializable.php:Product not used",
-            "@/vendor/league/:Only upload app will used"
+            "/vendor/league/"
         ]
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0-dev"
+            "dev-master": "1.1-dev"
         },
         "leevel": {
             "@providers": "The prividers",
             "providers": [
-                "Common\\Infra\\Provider\\App",
-                "Common\\Infra\\Provider\\Event",
-                "Common\\Infra\\Provider\\Router"
+                "App\\Infra\\Provider\\App",
+                "App\\Infra\\Provider\\Event",
+                "App\\Infra\\Provider\\Router"
             ],
             "@ignores": "Ignore the automatic discovery prividers",
             "ignores": [
-                "Leevel\\Notexits\\Provider\\Register"
             ],
             "@commands": "The commands",
             "commands": [
-                "Common\\App\\Console"
+                "App\\Console"
             ],
             "@options": "The extend options",
             "options": {
-                "test": "common/ui/option/test.php"
             },
             "@i18ns": "The extend i18ns",
             "i18ns": [
-                "common/ui/i18n"
             ],
             "@metas": "The metas",
             "metas": {
-                "foo": "bar"
             }
         },
         "leevel-console" : {
             "view-cache": {
                 "paths": [
-                    "common",
-                    "application"
+                    "apps",
+                    "assets/themes"
                 ]
+            },
+            "database-entity": {
+                "show_prop_black": [
+                    "update_at",
+                    "delete_at",
+                    "create_account",
+                    "update_account"
+                ],
+                "delete_at": "delete_at"
             }
         }
     },
     "scripts": {
+        "test": "@php assets/build/phpunit --colors=always",
+        "test-coverage": "@php assets/build/phpunit --colors=always -c phpunit.xml.coverage",
+        "php-cs-fixer": "@php assets/build/php-cs-fixer fix",
+        "phpstan": "@php assets/build/phpstan analyse",
+        "migrate": "@php leevel migrate:migrate",
+        "migrate-phpunit": "@php leevel migrate:migrate -e env.phpunit",
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
-            "@php -r \"file_exists('.testing') || copy('.testing.example', '.testing');\"",
-            "@php -r \"file_exists('frontend/.env.local') || copy('frontend/.env.example', 'frontend/.env.local');\"",
-            "@php -r \"file_exists('frontend/.env.production') || copy('frontend/.env.example', 'frontend/.env.production');\""
+            "@php -r \"file_exists('.env.phpunit') || copy('.env.phpunit.example', '.env.phpunit');\"",
+            "@php -r \"file_exists('assets/frontend/.env.local') || copy('assets/frontend/.env.example', 'assets/frontend/.env.local');\"",
+            "@php -r \"file_exists('assets/frontend/.env.production') || copy('assets/frontend/.env.example', 'assets/frontend/.env.production');\""
         ],
         "post-create-project-cmd": [
             "@php leevel links"
         ],
         "post-autoload-dump": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
-            "@php -r \"file_exists('.testing') || copy('.testing.example', '.testing');\"",
-            "@php -r \"file_exists('frontend/.env.local') || copy('frontend/.env.example', 'frontend/.env.local');\"",
-            "@php -r \"file_exists('frontend/.env.production') || copy('frontend/.env.example', 'frontend/.env.production');\""
+            "@php -r \"file_exists('.env.phpunit') || copy('.env.phpunit.example', '.env.phpunit');\"",
+            "@php -r \"file_exists('assets/frontend/.env.local') || copy('assets/frontend/.env.example', 'assets/frontend/.env.local');\"",
+            "@php -r \"file_exists('assets/frontend/.env.production') || copy('assets/frontend/.env.example', 'assets/frontend/.env.production');\""
         ]
     },
     "config": {
@@ -146,5 +142,6 @@
         "sort-packages": true,
         "optimize-autoloader": true
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
